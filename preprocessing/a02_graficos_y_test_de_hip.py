@@ -1,56 +1,18 @@
-# %% [markdown]
-# # Telecomunicaciones: identificar operadores ineficaces
 
-# %% [markdown]
-# ## Abrir el archivo de datos y leer la información general
-
-# %%
-#importar librerias
 import pandas as pd 
 import seaborn as sns
 import matplotlib.pyplot as plt
 from statsmodels.stats.proportion import proportions_ztest
 from scipy import stats as st
 import numpy as np
-
-# %%
-#leer el dataset 1
-dt=pd.read_csv('E:/proyectos/proyecto13/telecom_dataset_us.csv')
-print(dt)
-print(dt.info())
-
-# %%
-#leer el dataset de los clientes
-clients=pd.read_csv('telecom_clients_us.csv')
-print(clients)
-print(clients.info())
-
-# %% [markdown]
-# ## Lleva a cabo el análisis exploratorio de datos
-
-# %% [markdown]
-# ### Convierte los datos en los tipos necesarios.
-
-# %%
-#convertir date a formato fecha del dataset dt
-dt['date']=pd.to_datetime(dt['date'])
-#convertir columnas a tipo category
-dt['direction']= dt['direction'].astype('category')
-#convertir date a formato fecha del dataset clients
-clients['date_start']=pd.to_datetime(clients['date_start'])
-#convertir columnas a tipo category
-clients['tariff_plan']=clients['tariff_plan'].astype('category')
-
-# %% [markdown]
-# ### Encuentra y elimina errores en los datos. Asegúrate de explicar qué errores encontraste y cómo los eliminaste.
-
-# %%
-#eliminar las filas nulas del datasets dt de la fila operator_id
-dt.dropna(inplace=True)
+import pickle
 
 
 # %% [markdown]
 # ### Une los dos datasets
+
+dt = pd.read_csv("files/datasets/intermediate/a01_dataset_sin_na.csv") 
+clients = pd.read_csv("files/datasets/intermediate/a01_clients_sin_na.csv")
 
 # %%
 df= dt.merge(clients,on='user_id')
@@ -295,6 +257,11 @@ if results.pvalue < alpha:
 else:
     print("No podemos rechazar la hipótesis nula:  no podemos sacar conclusiones sobre la diferencia")
 
+
+results.to_csv("files/datasets/output/a02_clients_sin_na.csv")
+
+results
+
 # %% [markdown]
 # ## Escribe una conclusión general
 
@@ -304,5 +271,7 @@ else:
 
 # %% [markdown]
 # 
+
+pickle.dump(results, "files/datasets/output/a02_results_hip_test.pkl")
 
 
